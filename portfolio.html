@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portofolio – HeyGardha</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    .portfolio-page-hero {
+      padding: 140px 24px 60px;
+      text-align: center;
+      background: linear-gradient(180deg, #f5f3ff 0%, #fff 100%);
+    }
+    .portfolio-page-hero h1 { font-size: clamp(32px, 5vw, 52px); font-weight: 800; margin-bottom: 12px; }
+    .portfolio-page-hero p { color: var(--text-muted); font-size: 17px; max-width: 480px; margin: 0 auto 40px; }
+
+    .filter-bar {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 56px;
+    }
+    .filter-btn {
+      padding: 9px 20px;
+      border-radius: 50px;
+      border: 1px solid var(--border);
+      background: var(--white);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .portfolio-full { padding: 0 0 100px; }
+    .portfolio-full .container { text-align: center; }
+
+    .portfolio-full-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 28px;
+      text-align: left;
+    }
+
+    .pf-card {
+      background: var(--white);
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .pf-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+    .pf-card[data-hidden="true"] { display: none; }
+
+    .pf-img {
+      height: 220px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pf-browser {
+      width: 86%;
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+    }
+    .pf-browser .browser-bar { background: #f3f4f6; padding: 8px 12px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #e5e7eb; }
+    .pf-browser .browser-url { flex: 1; background: #e5e7eb; border-radius: 4px; height: 13px; margin-left: 8px; font-size: 9px; color: #6b7280; padding: 0 8px; overflow: hidden; white-space: nowrap; display: flex; align-items: center; }
+    .pf-browser .browser-content { padding: 10px; display: flex; flex-direction: column; gap: 7px; }
+    .pf-browser .bc-nav { height: 9px; background: #f3f4f6; border-radius: 4px; }
+    .pf-browser .bc-hero { height: 55px; border-radius: 6px; }
+    .pf-browser .bc-row { display: flex; gap: 5px; }
+    .pf-browser .bc-block { flex: 1; height: 32px; background: #f9fafb; border-radius: 5px; border: 1px solid #e5e7eb; }
+
+    .pf-info { padding: 20px 24px 24px; }
+    .pf-info h4 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+    .pf-info p { font-size: 13px; color: var(--text-muted); margin-bottom: 14px; line-height: 1.6; }
+    .pf-meta { display: flex; align-items: center; justify-content: space-between; }
+
+    .pf-cta-section {
+      margin-top: 64px;
+      padding: 56px 40px;
+      background: linear-gradient(135deg, var(--primary), #7c3aed);
+      border-radius: 24px;
+      text-align: center;
+      color: #fff;
+    }
+    .pf-cta-section h3 { font-size: 28px; font-weight: 800; margin-bottom: 12px; }
+    .pf-cta-section p { color: rgba(255,255,255,0.75); margin-bottom: 28px; font-size: 16px; }
+    .btn-white {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #fff;
+      color: var(--primary);
+      padding: 14px 32px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 15px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.2); }
+
+    @media (max-width: 600px) {
+      .portfolio-full-grid { grid-template-columns: 1fr; }
+      .pf-cta-section { padding: 40px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="logo">Hey<span>Gardha</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="portfolio.html" style="color:var(--primary)">Portofolio</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+      <button class="nav-cta" onclick="location.href='index.html#contact'">Konsultasi Gratis</button>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="index.html">Home</a>
+      <a href="portfolio.html">Portofolio</a>
+      <a href="index.html#contact">Contact</a>
+      <a href="index.html#contact" class="mobile-cta">Konsultasi Gratis</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="portfolio-page-hero">
+    <div class="section-label">Portofolio</div>
+    <h1>Project yang Sudah<br /><span class="highlight">Saya Kerjakan</span></h1>
+    <p>Dari landing page sampai web app — setiap project dikerjakan langsung dengan penuh perhatian.</p>
+  </div>
+
+  <!-- PORTFOLIO GRID -->
+  <section class="portfolio-full">
+    <div class="container">
+      <div class="filter-bar" id="filterBar">
+        <button class="filter-btn active" data-filter="all">Semua</button>
+        <button class="filter-btn" data-filter="landing">Landing Page</button>
+        <button class="filter-btn" data-filter="ecommerce">E-Commerce</button>
+        <button class="filter-btn" data-filter="company">Company Profile</button>
+        <button class="filter-btn" data-filter="webapp">Web App</button>
+      </div>
+
+      <div class="portfolio-full-grid" id="portfolioGrid">
+
+        <div class="pf-card fade-in" data-category="landing">
+          <div class="pf-img" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+            <div class="pf-browser">
+              <div class="browser-bar"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="browser-url">klinikanura.com</span></div>
+              <div class="browser-content">
+                <div class="bc-nav"></div>
+                <div class="bc-hero" style="background:linear-gradient(90deg,#e0e7ff,#c7d2fe)"></div>
+                <div class="bc-row"><div class="bc-block"></div><div class="bc-block"></div><div class="bc-block"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="pf-info">
+            <h4>Klinik Kecantikan Aura</h4>
+            <p>Landing page modern untuk klinik kecantikan dengan desain elegan dan form booking online.</p>
+            <div class="pf-meta"><span class="tag">Landing Page</span></div>
+          </div>
+        </div>
+
+        <div class="pf-card fade-in" data-category="ecommerce">
+          <div class="pf-img" style="background: linear-gradient(135deg, #f093fb, #f5576c);">
+            <div class="pf-browser">
+              <div class="browser-bar"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="browser-url">batiknusantara.id</span></div>
+              <div class="browser-content">
+                <div class="bc-nav"></div>
+                <div class="bc-hero" style="background:linear-gradient(90deg,#fce7f3,#fecdd3)"></div>
+                <div class="bc-row"><div class="bc-block"></div><div class="bc-block"></div><div class="bc-block"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="pf-info">
+            <h4>Toko Batik Nusantara</h4>
+            <p>Toko online lengkap dengan katalog produk, keranjang belanja, dan integrasi pembayaran.</p>
+            <div class="pf-meta"><span class="tag">E-Commerce</span></div>
+          </div>
+        </div>
+
+        <div class="pf-card fade-in" data-category="company">
+          <div class="pf-img" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">
+            <div class="pf-browser">
+              <div class="browser-bar"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="browser-url">cvmajubersama.com</span></div>
+              <div class="browser-content">
+                <div class="bc-nav"></div>
+                <div class="bc-hero" style="background:linear-gradient(90deg,#e0f2fe,#bae6fd)"></div>
+                <div class="bc-row"><div class="bc-block"></div><div class="bc-block"></div><div class="bc-block"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="pf-info">
+            <h4>CV Maju Bersama</h4>
+            <p>Company profile profesional untuk perusahaan konstruksi dengan portofolio project.</p>
+            <div class="pf-meta"><span class="tag">Company Profile</span></div>
+          </div>
+        </div>
+
+        <div class="pf-card fade-in" data-category="webapp">
+          <div class="pf-img" style="background: linear-gradient(135deg, #43e97b, #38f9d7);">
+            <div class="pf-browser">
+              <div class="browser-bar"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="browser-url">bookingsalon.id</span></div>
+              <div class="browser-content">
+                <div class="bc-nav"></div>
+                <div class="bc-hero" style="background:linear-gradient(90deg,#dcfce7,#bbf7d0)"></div>
+                <div class="bc-row"><div class="bc-block"></div><div class="bc-block"></div><div class="bc-block"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="pf-info">
+            <h4>Sistem Booking Salon</h4>
+            <p>Aplikasi booking online untuk salon kecantikan dengan manajemen jadwal dan notifikasi.</p>
+            <div class="pf-meta"><span class="tag">Web App</span></div>
+          </div>
+        </div>
+
+        <div class="pf-card fade-in" data-category="landing">
+          <div class="pf-img" style="background: linear-gradient(135deg, #fa709a, #fee140);">
+            <div class="pf-browser">
+              <div class="browser-bar"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="browser-url">propertiindah.com</span></div>
+              <div class="browser-content">
+                <div class="bc-nav"></div>
+                <div class="bc-hero" style="background:linear-gradient(90deg,#fef9c3,#fde68a)"></div>
+                <div class="bc-row"><div class="bc-block"></div><div class="bc-block"></div><div class="bc-block"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="pf-info">
+            <h4>Properti Indah Realty</h4>
+            <p>Landing page untuk agen properti dengan galeri listing dan form kontak terintegrasi.</p>
+            <div class="pf-meta"><span class="tag">Landing Page</span></div>
+          </div>
+        </div>
+
+        <div class="pf-card fade-in" data-category="company">
+          <div class="pf-img" style="background: linear-gradient(135deg, #a18cd1, #fbc2eb);">
+            <div class="pf-browser">
+              <div class="browser-bar"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="browser-url">dapuribu.id</span></div>
+              <div class="browser-content">
+                <div class="bc-nav"></div>
+                <div class="bc-hero" style="background:linear-gradient(90deg,#fae8ff,#f5d0fe)"></div>
+                <div class="bc-row"><div class="bc-block"></div><div class="bc-block"></div><div class="bc-block"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="pf-info">
+            <h4>Restoran Dapur Ibu</h4>
+            <p>Website restoran dengan menu digital, galeri foto, dan informasi reservasi meja.</p>
+            <div class="pf-meta"><span class="tag">Company Profile</span></div>
+          </div>
+        </div>
+
+        <div class="pf-card fade-in" data-category="webapp">
+          <div class="pf-img" style="background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);">
+            <div class="pf-browser">
+              <div class="browser-bar"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="browser-url">inventaris.app</span></div>
+              <div class="browser-content">
+                <div class="bc-nav"></div>
+                <div class="bc-hero" style="background:linear-gradient(90deg,#e2e8f0,#cbd5e1)"></div>
+                <div class="bc-row"><div class="bc-block"></div><div class="bc-block"></div><div class="bc-block"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="pf-info">
+            <h4>Sistem Inventaris Toko</h4>
+            <p>Dashboard manajemen stok dan inventaris untuk toko retail dengan laporan real-time.</p>
+            <div class="pf-meta"><span class="tag">Web App</span></div>
+          </div>
+        </div>
+
+        <div class="pf-card fade-in" data-category="landing">
+          <div class="pf-img" style="background: linear-gradient(135deg, #f7971e, #ffd200);">
+            <div class="pf-browser">
+              <div class="browser-bar"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="browser-url">kursusdesain.id</span></div>
+              <div class="browser-content">
+                <div class="bc-nav"></div>
+                <div class="bc-hero" style="background:linear-gradient(90deg,#fef3c7,#fde68a)"></div>
+                <div class="bc-row"><div class="bc-block"></div><div class="bc-block"></div><div class="bc-block"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="pf-info">
+            <h4>Kursus Desain Online</h4>
+            <p>Landing page untuk platform kursus desain grafis dengan halaman pendaftaran dan testimoni.</p>
+            <div class="pf-meta"><span class="tag">Landing Page</span></div>
+          </div>
+        </div>
+
+        <div class="pf-card fade-in" data-category="ecommerce">
+          <div class="pf-img" style="background: linear-gradient(135deg, #11998e, #38ef7d);">
+            <div class="pf-browser">
+              <div class="browser-bar"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span><span class="browser-url">organikfresh.id</span></div>
+              <div class="browser-content">
+                <div class="bc-nav"></div>
+                <div class="bc-hero" style="background:linear-gradient(90deg,#d1fae5,#a7f3d0)"></div>
+                <div class="bc-row"><div class="bc-block"></div><div class="bc-block"></div><div class="bc-block"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="pf-info">
+            <h4>Organik Fresh Market</h4>
+            <p>Toko online produk organik dengan fitur langganan mingguan dan pengiriman terjadwal.</p>
+            <div class="pf-meta"><span class="tag">E-Commerce</span></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- CTA -->
+      <div class="pf-cta-section">
+        <h3>Siap Jadi Project Berikutnya?</h3>
+        <p>Konsultasi gratis, tanpa komitmen. Ceritakan kebutuhan anda sekarang.</p>
+        <a href="https://wa.me/6281234567890?text=Halo%20Gardha%2C%20saya%20mau%20konsultasi%20website" target="_blank" class="btn-white">
+          💬 Chat di WhatsApp
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <a href="index.html" class="logo">Hey<span>Gardha</span></a>
+      <p>© 2025 HeyGardha. Jasa Website Profesional Anti Ribet.</p>
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="portfolio.html">Portofolio</a>
+        <a href="index.html#contact">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+    });
+
+    document.getElementById('hamburger').addEventListener('click', () => {
+      document.getElementById('mobileMenu').classList.toggle('open');
+      document.getElementById('hamburger').classList.toggle('active');
+    });
+
+    // Filter
+    document.getElementById('filterBar').addEventListener('click', (e) => {
+      const btn = e.target.closest('.filter-btn');
+      if (!btn) return;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.dataset.filter;
+      document.querySelectorAll('.pf-card').forEach(card => {
+        card.dataset.hidden = filter !== 'all' && card.dataset.category !== filter ? 'true' : 'false';
+      });
+    });
+
+    // Fade in
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
